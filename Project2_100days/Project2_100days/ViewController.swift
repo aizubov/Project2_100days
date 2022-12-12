@@ -15,6 +15,9 @@ class ViewController: UIViewController {
     var countries = [String]()
     var score = 0
     var correctAnswer = 0
+    var currentQuestion = 0
+    
+    let maxQuestion = 10
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +39,7 @@ class ViewController: UIViewController {
         
     }
     func askQuestion(action: UIAlertAction! = nil) {
+        currentQuestion += 1
         
         
         countries.shuffle()
@@ -45,26 +49,69 @@ class ViewController: UIViewController {
         button2.setImage(UIImage(named: countries[1]), for: .normal)
         button3.setImage(UIImage(named: countries[2]), for: .normal)
         
-        title = countries[correctAnswer].uppercased()
+        updateTitle()
     }
 
     @IBAction func buttonTapped(_ sender: UIButton) {
         var title: String
+        var message: String
         
         if sender.tag == correctAnswer {
-            title = "Correct"
+            title = "Correct!"
             score += 1
-        } else {
-            title = "Wrong"
-            score -= 1
+            message = "Score: \(score)"
+            
+            updateTitle()
+            
+            if currentQuestion < maxQuestion {
+                askQuestion()
+            }
+            else {
+                gameOver()
+            }
+            
         }
+        else {
+            title = "Wrong!"
+            
+            score -= 1
+            message = "Correct answer is a flag number \(correctAnswer + 1)"
+            postAlert(title: title, message: message)
+        }
+    }
+    
+    func updateTitle() {
+        title = "| \(countries[correctAnswer].uppercased())? | SCORE: \(score) | ROUND: \(currentQuestion)/\(maxQuestion) |"
+    }
+    
+    func gameOver() {
+        let scoreFinal = score
         
-        let ac = UIAlertController(title: title, message: "Your score is \(score)", preferredStyle: .alert)
+        score = 0
+        correctAnswer = 0
+        currentQuestion = 0
         
-        ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
+        let ac = UIAlertController(title: "Game over!", message: "Your score is \(scoreFinal)", preferredStyle: .alert)
+        
+        ac.addAction(UIAlertAction(title: "Start new game", style: .default, handler: askQuestion))
         
         present(ac, animated: true)
     }
     
-    
-}
+    func postAlert(title: String, message: String) {
+      let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+      self.present(alert, animated: true, completion: nil)
+
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+        alert.dismiss(animated: true, completion: nil)
+        self.updateTitle()
+          
+        if self.currentQuestion < self.maxQuestion {
+            self.askQuestion()
+        }
+        else {
+            self.gameOver()
+        }
+          
+      })
+    }}
