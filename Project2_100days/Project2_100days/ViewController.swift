@@ -50,16 +50,16 @@ class ViewController: UIViewController {
         
         correctAnswer = Int.random(in: 0...2)
         
-        UIView.transition(with: button1, duration: 1.5, options: .transitionFlipFromRight, animations: { [self] in
+        UIView.transition(with: button1, duration: 0.5, options: .transitionFlipFromRight, animations: { [self] in
             self.button1.setImage(UIImage(named: self.countries[0]), for: .normal)
         }, completion: nil)
         
-        UIView.transition(with: button2, duration: 1.7, options: .transitionFlipFromRight, animations: { [self] in
+        UIView.transition(with: button2, duration: 0.7, options: .transitionFlipFromRight, animations: { [self] in
             self.button2.setImage(UIImage(named: self.countries[1]), for: .normal)
             
         }, completion: nil)
         
-        UIView.transition(with: button3, duration: 1.9, options: .transitionFlipFromRight, animations: { [self] in
+        UIView.transition(with: button3, duration: 0.9, options: .transitionFlipFromRight, animations: { [self] in
             self.button3.setImage(UIImage(named: self.countries[2]), for: .normal)
             
         }, completion: nil)
@@ -124,6 +124,8 @@ class ViewController: UIViewController {
     }
     
     func postAlert(title: String, message: String, sender_tag: Int, correct: Int) {
+        updateTitle()
+        
         if sender_tag == 0 {
             button1.layer.borderColor = UIColor.red.cgColor
         } else if sender_tag == 1 {
@@ -143,7 +145,7 @@ class ViewController: UIViewController {
 
       DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
         //alert.dismiss(animated: true, completion: nil)
-        self.updateTitle()
+        
           
         if self.currentQuestion < self.maxQuestion {
             self.askQuestion()
