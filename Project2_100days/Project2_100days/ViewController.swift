@@ -7,6 +7,18 @@
 
 import UIKit
 
+extension UIView {
+  func animateBorderWidth(toValue: CGFloat, duration: Double = 0.9) {
+    let animation = CABasicAnimation(keyPath: "borderWidth")
+    animation.fromValue = layer.borderWidth
+    animation.toValue = toValue
+    animation.duration = duration
+    layer.add(animation, forKey: "Width")
+    layer.borderWidth = toValue
+  }
+}
+
+
 class ViewController: UIViewController {
     @IBOutlet var button1: UIButton!
     @IBOutlet var button2: UIButton!
@@ -29,9 +41,9 @@ class ViewController: UIViewController {
                       "nigeria", "poland", "russia",
                       "spain", "uk", "us"]
         
-        button1.layer.borderWidth = 6
-        button2.layer.borderWidth = 6
-        button3.layer.borderWidth = 6
+        button1.layer.borderWidth = 2
+        button2.layer.borderWidth = 2
+        button3.layer.borderWidth = 2
         
         button1.layer.borderColor = UIColor.lightGray.cgColor
         button2.layer.borderColor = UIColor.lightGray.cgColor
@@ -41,6 +53,11 @@ class ViewController: UIViewController {
         
     }
     func askQuestion(action: UIAlertAction! = nil) {
+        
+        button1.layer.borderWidth = 2
+        button2.layer.borderWidth = 2
+        button3.layer.borderWidth = 2
+        
         button1.layer.borderColor = UIColor.lightGray.cgColor
         button2.layer.borderColor = UIColor.lightGray.cgColor
         button3.layer.borderColor = UIColor.lightGray.cgColor
@@ -70,7 +87,39 @@ class ViewController: UIViewController {
     @IBAction func buttonTapped(_ sender: UIButton) {
         if sender.tag == correctAnswer {
             score += 1
+            
             (sender as UIButton).layer.borderColor = UIColor.green.cgColor
+            (sender as UIButton).animateBorderWidth(toValue: 55, duration: 0.9)
+            (sender as UIButton).animateBorderWidth(toValue: 2)
+            
+            if sender.tag == 0 {
+                
+                button2.layer.borderWidth = 55
+                button2.layer.borderColor = UIColor.red.cgColor
+                
+                button3.layer.borderWidth = 55
+                button3.layer.borderColor = UIColor.red.cgColor
+                
+            }
+            else if sender.tag == 1 {
+                
+                button1.layer.borderWidth = 55
+                button1.layer.borderColor = UIColor.red.cgColor
+                
+                button3.layer.borderWidth = 55
+                button3.layer.borderColor = UIColor.red.cgColor
+                
+            }
+            else if sender.tag == 2 {
+                
+                button1.layer.borderWidth = 55
+                button1.layer.borderColor = UIColor.red.cgColor
+                
+                button2.layer.borderWidth = 55
+                button2.layer.borderColor = UIColor.red.cgColor
+                
+            }
+            
             updateTitle()
             
             if currentQuestion < maxQuestion {
@@ -84,7 +133,25 @@ class ViewController: UIViewController {
             
         }
         else {
+            (sender as UIButton).layer.borderWidth = 55
             (sender as UIButton).layer.borderColor = UIColor.red.cgColor
+            
+            if sender.tag != 0 && correctAnswer != 0{
+                button1.layer.borderWidth = 55
+                button1.layer.borderColor = UIColor.red.cgColor
+                }
+            else if sender.tag != 1 && correctAnswer != 1 {
+                button2.layer.borderWidth = 55
+                button2.layer.borderColor = UIColor.red.cgColor
+                }
+            else if sender.tag != 2 && correctAnswer != 2 {
+                button3.layer.borderWidth = 55
+                button3.layer.borderColor = UIColor.red.cgColor
+                }
+        
+        
+        
+            
             score -= 1
             postAlert(correct: correctAnswer)
         }
@@ -123,10 +190,18 @@ class ViewController: UIViewController {
         
         if correct == 0 {
             button1.layer.borderColor = UIColor.green.cgColor
+            button1.animateBorderWidth(toValue: 55, duration: 0.9)
+            button1.animateBorderWidth(toValue: 2)
+            
         } else if correct == 1 {
             button2.layer.borderColor = UIColor.green.cgColor
+            button2.animateBorderWidth(toValue: 55, duration: 0.9)
+            button2.animateBorderWidth(toValue: 2)
+            
         } else if correct == 2 {
             button3.layer.borderColor = UIColor.green.cgColor
+            button3.animateBorderWidth(toValue: 55, duration: 0.9)
+            button3.animateBorderWidth(toValue: 2)
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
