@@ -12,6 +12,8 @@ class ViewController: UIViewController {
     @IBOutlet var button2: UIButton!
     @IBOutlet var button3: UIButton!
     
+    @IBOutlet var label: UILabel!
+    
     var countries = [String]()
     var score = 0
     var correctAnswer = 0
@@ -54,38 +56,25 @@ class ViewController: UIViewController {
             self.button1.setImage(UIImage(named: self.countries[0]), for: .normal)
         }, completion: nil)
         
-        UIView.transition(with: button2, duration: 0.7, options: .transitionFlipFromRight, animations: { [self] in
+        UIView.transition(with: button2, duration: 0.6, options: .transitionFlipFromRight, animations: { [self] in
             self.button2.setImage(UIImage(named: self.countries[1]), for: .normal)
-            
         }, completion: nil)
         
-        UIView.transition(with: button3, duration: 0.9, options: .transitionFlipFromRight, animations: { [self] in
+        UIView.transition(with: button3, duration: 0.7, options: .transitionFlipFromRight, animations: { [self] in
             self.button3.setImage(UIImage(named: self.countries[2]), for: .normal)
-            
         }, completion: nil)
 
-        //button1.setImage(UIImage(named: countries[0]), for: .normal)
-        //button2.setImage(UIImage(named: countries[1]), for: .normal)
-        //button3.setImage(UIImage(named: countries[2]), for: .normal)
-        
         updateTitle()
     }
 
     @IBAction func buttonTapped(_ sender: UIButton) {
-        var title: String
-        var message: String
-        
         if sender.tag == correctAnswer {
-            title = "Correct!"
             score += 1
-            message = "Score: \(score)"
-                                          
             (sender as UIButton).layer.borderColor = UIColor.green.cgColor
-            
             updateTitle()
             
             if currentQuestion < maxQuestion {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                     self.askQuestion()
                 });
             }
@@ -95,18 +84,23 @@ class ViewController: UIViewController {
             
         }
         else {
-            title = "Wrong!"
-            
+            (sender as UIButton).layer.borderColor = UIColor.red.cgColor
             score -= 1
-            message = "Correct answer is a flag number \(correctAnswer + 1)"
-            postAlert(title: title, message: message, sender_tag: sender.tag, correct: correctAnswer)
-            
-            
+            postAlert(correct: correctAnswer)
         }
     }
     
     func updateTitle() {
-        title = "| \(countries[correctAnswer].uppercased())? | SCORE: \(score) | ROUND: \(currentQuestion)/\(maxQuestion) |"
+        if countries[correctAnswer] == "uk" {
+            label.text = "Guess the flag of the UK"
+        }
+        else if countries[correctAnswer] == "us" {
+            label.text = "Guess the flag of the US"
+        }
+        else {
+            label.text = "Guess the flag of \(countries[correctAnswer].capitalized)"
+        }
+        title = "| SCORE: \(score) | ROUND: \(currentQuestion)/\(maxQuestion) |"
     }
     
     func gameOver() {
@@ -123,16 +117,9 @@ class ViewController: UIViewController {
         present(ac, animated: true)
     }
     
-    func postAlert(title: String, message: String, sender_tag: Int, correct: Int) {
+    func postAlert(correct: Int) {
         updateTitle()
-        
-        if sender_tag == 0 {
-            button1.layer.borderColor = UIColor.red.cgColor
-        } else if sender_tag == 1 {
-            button2.layer.borderColor = UIColor.red.cgColor
-        } else if sender_tag == 2 {
-            button3.layer.borderColor = UIColor.red.cgColor
-        }
+
         
         if correct == 0 {
             button1.layer.borderColor = UIColor.green.cgColor
@@ -140,13 +127,10 @@ class ViewController: UIViewController {
             button2.layer.borderColor = UIColor.green.cgColor
         } else if correct == 2 {
             button3.layer.borderColor = UIColor.green.cgColor
-        }      //let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-      //self.present(alert, animated: true, completion: nil)
+        }
 
-      DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-        //alert.dismiss(animated: true, completion: nil)
-        
-          
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+
         if self.currentQuestion < self.maxQuestion {
             self.askQuestion()
         }
