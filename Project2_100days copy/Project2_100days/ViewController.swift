@@ -25,7 +25,6 @@ class ViewController: UIViewController {
     @IBOutlet var button3: UIButton!
     
     @IBOutlet var label: UILabel!
-    @IBOutlet var label2: UILabel!
     
     var countries = [String]()
     var score = 0
@@ -49,8 +48,6 @@ class ViewController: UIViewController {
         button1.layer.borderColor = UIColor.lightGray.cgColor
         button2.layer.borderColor = UIColor.lightGray.cgColor
         button3.layer.borderColor = UIColor.lightGray.cgColor
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "score", style: .plain, target: self, action: #selector(scoreTapped))
         
         askQuestion()
         
@@ -118,17 +115,16 @@ class ViewController: UIViewController {
     }
     
     func updateTitle() {
-        title = "Guess the flag"
         if countries[correctAnswer] == "uk" {
-            label.text = "the UK"
+            label.text = "Guess the flag of the UK"
         }
         else if countries[correctAnswer] == "us" {
-            label.text = "the US"
+            label.text = "Guess the flag of the US"
         }
         else {
-            label.text = "\(countries[correctAnswer].capitalized)"
+            label.text = "Guess the flag of \(countries[correctAnswer].capitalized)"
         }
-        label2.text = "Round: \(currentQuestion)/\(maxQuestion)"
+        title = "| SCORE: \(score) | ROUND: \(currentQuestion)/\(maxQuestion) |"
     }
     
     func gameOver() {
@@ -142,12 +138,6 @@ class ViewController: UIViewController {
         
         ac.addAction(UIAlertAction(title: "Start new game", style: .default, handler: askQuestion))
         
-        present(ac, animated: true)
-    }
-    
-    @objc func scoreTapped() {
-        let ac = UIAlertController(title: "Your score is", message: "\(score) out of 10", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: nil))
         present(ac, animated: true)
     }
     
@@ -181,5 +171,4 @@ class ViewController: UIViewController {
         }
           
       })
-    }
-}
+    }}
